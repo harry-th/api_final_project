@@ -1,7 +1,10 @@
 import logo from './logo.svg';
 import './App.css';
 import { useEffect, useState } from 'react';
+import jwtDecode from 'jwt-decode';
 import axios from 'axios';
+import styles from './Display.module.css'
+import Display from './Display';
 
 /* global google */
 const topics = [
@@ -107,8 +110,15 @@ function App() {
             let results = item.data.items[0]
             results.snippet.resourceId = resourceIds[index]
             return item.data.items[0]
+          }).map((item) => {
+            let mainCategories = item.topicDetails.topicIds.map((item) => {
+              let topic = topics.find((l) => l.id === item && l.parent)
+              return (
+                topic && topic.topic
+              )
+            }).filter((item) => item)
+            return { ...item, topicDetails: { mainCategories, ...item.topicDetails } }
           })
-          console.log(subs)
           setSubs(prev => subs)
         })
       }).catch((error) => {
@@ -212,8 +222,9 @@ function App() {
       return [...prev.sort((a, b) => (b?.count || 0) - (a?.count || 0))]
     })
   }
+
   return (
-    <div className="App">
+    <div className={styles.container}>
       hello
       <div>
         <button onClick={doAuth}>AUTH</button>
@@ -225,50 +236,13 @@ function App() {
         <button onClick={orderByCount}>ORDER BY COUNT </button>
         <button onClick={() => console.log(subs, reccomended)}>print subs</button>
       </div>
-
-      <div>
-        <div style={{ display: 'flex', width: '800px', flexWrap: 'wrap', flexDirection: 'row-reverse' }}>
-          {reccomended && reccomended.map(item => {
-            return (
-              <div style={{ width: '120px', height: '70px', marginTop: '220px', marginLeft: '120px' }}>
-                {item.snippet.title} {item.statistics.subscriberCount > 1000000 ? item.statistics.subscriberCount / 1000000 + 'M' : item.statistics.subscriberCount / 1000 + 'K'} {item?.count}
-                <img src={item.snippet.thumbnails.default.url} alt='' />
-                {(item?.topicDetails?.topicIds || []).map((element) => {
-                  let topic = topics.find((l) => l.id === element && l.parent)
-                  return (
-                    <span>{topic?.topic}</span>
-                  )
-                })}
-              </div>
-            )
-          })}
+      <div className={styles.dashboard}>
+        <div className={styles.legend}>
+          LEGEND
         </div>
-        <ul>
-          {subs && subs.map((item, index) => {
-            return (
-              <li key={item.id + index}><h2>
-                {item.snippet.title}  {item.statistics.subscriberCount > 1000000 ? item.statistics.subscriberCount / 1000000 + 'M' : item.statistics.subscriberCount / 1000 + 'K'}
-              </h2>
-                {item.topicDetails.topicIds.map((item) => {
-                  let topic = topics.find((l) => l.id === item && l.parent)
-                  return (
-                    <p>{topic && topic.topic}</p>
-                  )
-                })}
-                {item.channels && <h4>reccomendedChannels</h4>}
-                {item.channels && item.channels.map((item, index) => (
-                  <p key={item.id + index}><img src={item.snippet.thumbnails.default.url} alt='' />  {item.snippet.title} {item.statistics.subscriberCount > 1000000 ? item.statistics.subscriberCount / 1000000 + 'M' : item.statistics.subscriberCount / 1000 + 'K'}</p>
-                ))}
-                {item.subscriptions && <h4>Subscriptions</h4>}
-                {item.subscriptions && item.subscriptions.map((item, index) => (
-                  <p key={item.etag + index}><img src={item.snippet.thumbnails.default.url} alt='' />  {item.snippet.title}  {item.statistics.subscriberCount > 1000000 ? item.statistics.subscriberCount / 1000000 + 'M' : item.statistics.subscriberCount / 1000 + 'K'}</p>
-                ))}
-              </li>
-            )
-          })}
-        </ul>
+        <Display subs={subs} topics={topics} />
       </div>
-    </div>
+    </div >
   );
 }
 

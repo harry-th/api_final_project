@@ -1,0 +1,87 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 98vw;
+  height: 98vh;
+  .dashboard {
+    display: flex;
+    border: 2px solid black;
+    justify-content: center;
+    height: 95vh;
+    width: 95vw;
+  }
+  .legend {
+    margin: 1%;
+    background-color: blue;
+    width: 10%;
+  }
+}
+.outerdisplay {
+  width: 80%;
+  border: 2px solid black;
+  background-color: antiquewhite;
+  margin: 3%;
+}
+.display {
+  display: flex;
+  justify-content: center;
+  height: 70vh;
+  margin: 1%;
+  > div {
+    margin: 1%;
+  }
+  .usercolumn {
+    width: 15%;
+    display: flex;
+    flex-direction: column;
+    .chart {
+      height: 20vh;
+      text-align: center;
+    }
+    .user {
+      height: 50vh;
+      text-align: center;
+      border: 2px solid black;
+    }
+  }
+  .insert {
+    width: 5%;
+    margin-top: 40%;
+    margin-bottom: 12%;
+    border: 2px solid black;
+  }
+  .subcolumn {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 70%;
+    border: 2px solid black;
+    height: 100%;
+    margin-left: 0px;
+    overflow: scroll;
+    .subcontainer {
+      display: flex;
+      flex-wrap: wrap;
+    }
+    div {
+      margin: 3px;
+      padding: 3px;
+    }
+  }
+  .Gaming {
+    background-color: yellow;
+  }
+  .Lifestyle {
+    background-color: green;
+  }
+  .Music {
+    background-color: red;
+  }
+  .Society {
+    background-color: blue;
+  }
+  .Entertainment {
+    background-color: orange;
+  }
+}
